@@ -24,7 +24,8 @@ public class Percolation {
 
 	private int noOfOpenSite;
 
-	private WeightedQuickUnionUF weightedQuickUnionUF;
+	private WeightedQuickUnionUF wquUFWithAuxillaryTopBottom;
+	private WeightedQuickUnionUF wquUFWithAuxillaryTopWithoutBottom;
 
 	/**
 	 * Constructor .
@@ -40,7 +41,8 @@ public class Percolation {
 		siteSize = n;
 		numberOfSites = n * n;
 		sitesOccupancyStatus = new boolean[siteSize][siteSize];
-		weightedQuickUnionUF = new WeightedQuickUnionUF(numberOfSites + 2);
+		wquUFWithAuxillaryTopBottom = new WeightedQuickUnionUF(numberOfSites + 2);
+		wquUFWithAuxillaryTopWithoutBottom = new WeightedQuickUnionUF(numberOfSites + 2);
 	}
 
 	/**
@@ -108,8 +110,7 @@ public class Percolation {
 	 */
 	public boolean isFull(int row, int col) {
 		validateRowAndColumn(row, col);
-		return getSiteStatus(row, col)
-				&& weightedQuickUnionUF.connected(numberOfSites, computeQuickUnionIndex(row, col));
+		return wquUFWithAuxillaryTopWithoutBottom.connected(numberOfSites, computeQuickUnionIndex(row, col));
 
 	}
 
@@ -136,7 +137,7 @@ public class Percolation {
 	 * 
 	 */
 	public boolean percolates() {
-		return weightedQuickUnionUF.connected(numberOfSites, numberOfSites + OFFSET_ONE);
+		return wquUFWithAuxillaryTopBottom.connected(numberOfSites, numberOfSites + OFFSET_ONE);
 
 	}
 
@@ -191,19 +192,19 @@ public class Percolation {
 
 	private void computeUnionWithAdjacentSite(int row, int col, int siteIndex) {
 		if (isRightSitePresentAndOpened(row, col)) {
-			weightedQuickUnionUF.union(siteIndex, computeQuickUnionIndex(row, col + OFFSET_ONE));
+			union(siteIndex, computeQuickUnionIndex(row, col + OFFSET_ONE));
 		}
 
 		if (isLeftSitePresentAndOpened(row, col)) {
-			weightedQuickUnionUF.union(siteIndex, computeQuickUnionIndex(row, col - OFFSET_ONE));
+			union(siteIndex, computeQuickUnionIndex(row, col - OFFSET_ONE));
 		}
 
 		if (isUpperSitePresentAndOpened(row, col)) {
-			weightedQuickUnionUF.union(siteIndex, computeQuickUnionIndex(row + OFFSET_ONE, col));
+			union(siteIndex, computeQuickUnionIndex(row + OFFSET_ONE, col));
 		}
 
 		if (isLowerSitePresentAndOpened(row, col)) {
-			weightedQuickUnionUF.union(siteIndex, computeQuickUnionIndex(row - OFFSET_ONE, col));
+			union(siteIndex, computeQuickUnionIndex(row - OFFSET_ONE, col));
 
 		}
 	}
@@ -226,12 +227,17 @@ public class Percolation {
 
 	private void computeUnionWithVirtualSite(int siteIndex) {
 		if (isTopSite(siteIndex)) {
-			weightedQuickUnionUF.union(siteIndex, numberOfSites);
+			union(siteIndex, numberOfSites);
 		}
 
 		if (isBottomSite(siteIndex)) {
-			weightedQuickUnionUF.union(siteIndex, numberOfSites + OFFSET_ONE);
+			wquUFWithAuxillaryTopBottom.union(siteIndex, numberOfSites + OFFSET_ONE);
 		}
+	}
+
+	private void union(int row, int col) {
+		wquUFWithAuxillaryTopBottom.union(row, col);
+		wquUFWithAuxillaryTopWithoutBottom.union(row, col);
 	}
 
 	private boolean isBottomSite(int siteIndex) {
