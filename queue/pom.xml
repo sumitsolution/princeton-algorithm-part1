@@ -1,0 +1,54 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.sumit.princeton.algo.part1</groupId>
+	<artifactId>queue</artifactId>
+	<packaging>jar</packaging>
+	<version>1.0-SNAPSHOT</version>
+	<name>queue</name>
+	<url>http://maven.apache.org</url>
+	<properties>
+		<junit.version>4.11</junit.version>
+		<surefire.plugin.version>2.19.1</surefire.plugin.version>
+		<compiler.plugin.version>3.6.1</compiler.plugin.version>
+		<alg4.version>1.0</alg4.version>
+	</properties>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sumit.princeton.algo</groupId>
+			<artifactId>alg4</artifactId>
+			<version>${alg4.version}</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/resources/algs4.jar</systemPath>
+		</dependency>
+	</dependencies>
+
+	<build>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${surefire.plugin.version}</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${compiler.plugin.version}</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
